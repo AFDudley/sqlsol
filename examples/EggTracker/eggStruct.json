@@ -1,0 +1,24 @@
+{
+	"initSeq":{
+		"eggid": {"min": 1, "call": "getShit", "field": "EGGLen"},
+		"address": {"min": 0, "call": "getShit", "field": "USERLen"},
+		"eventid": {"min": 0, "dependent": "eggid", "call": "getEggData", "field": "historyLength"}
+	},
+	"tables":{
+		"eggs":{
+			"call": "getEggData",
+			"keys": ["eggid"]
+		},
+		"users":{
+			"call": "getUser",
+			"keys": ["address"]
+		},
+		"history":{
+			"call": "getHistoryEntry",
+			"keys": [
+				"eggid",
+				"eventid"
+			]
+		}
+	}
+}

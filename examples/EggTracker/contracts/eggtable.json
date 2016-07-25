@@ -1,0 +1,11 @@
+{
+	"name": "eggs",
+	"keys": [
+		"AUTO"
+	],
+	"row":[
+		{"name": "originDate", "type":"uint"},
+		{"name": "desc", "type": "string"},
+		{"name": "rating", "type": "uint"}
+	]
+}
