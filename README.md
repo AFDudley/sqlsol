@@ -68,9 +68,12 @@ returns formatted strings for when calling by curl.
 
 In all of the above, `:eggid` is the id assigned to the egg upon creation, that you wish to retrieve data for.
 
+## Contribute
+See the [eris platform contributing file here](https://github.com/eris-ltd/coding/blob/master/github/CONTRIBUTING.md).
+
 ## Resources
-examples/EggTracker/server.js - main app file
-examples/EggTracker/eggStruct.json - the definition file
-examples/EggTracker/contracts/eggtracker.sol - the smart contract we are using.
+`examples/EggTracker/server.js` - main app file
+`examples/EggTracker/eggStruct.json` - the definition file
+`examples/EggTracker/contracts/eggtracker.sol` - the smart contract we are using
 
 
