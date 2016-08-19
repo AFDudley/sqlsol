@@ -84,6 +84,7 @@ createDb().spread(function (url, validator) {
 
 
 function getEggData(eggid, cb){
+	console.log(eggid)
 	//Get the core eggid data
 	eggcache.db.get('Select * from eggs where eggid = ?', eggid, function(err, eggdata){
 		if (err) return cb(err);
@@ -178,7 +179,7 @@ function startServer(){
 				res.send(ecode.code, ecode.msg)
 				return next()
 			}
-
+			console.log(eggdata)
 			body = prettyPrint(req.params.eggid, eggdata)
 			res.writeHead(200, {
 				'Content-Length': Buffer.byteLength(body),
@@ -272,6 +273,12 @@ function startServer(){
 	console.log("");
 	console.log("Welcome to: " + name + " on port " + port.toString());
 	console.log("");
+
+	test = '07B38CC813F208F59E5CB3C1E10D473F6076BA27'
+	eggcache.db.get('select * from users where address = ?', test, function(err, data){
+		console.log(err)
+		console.log(data)
+	})
 
 }
 

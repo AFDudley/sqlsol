@@ -1,15 +1,13 @@
 import "./stdlib/errors.sol";
-import "./stdlib/linkedList.sol";
+import "./stdlib/serialize.sol";
 import "./stdlib/tracker.sol";
+import "./stdlib/sqlsol.sol";
 
-contract eggtracker is Errors, linkedList, tracker{
+contract eggtracker is Errors, sqlsol, serialize, tracker{
 
 	uint constant PERM_ADMIN = 1;
 	uint constant PERM_CREATE = 2;
 	uint constant PERM_TRADE = 3;
-
-	event update(string name, uint key1, uint key2);
-	event remove(string name, uint key1, uint key2);
 
 	struct egg {
 		uint originDate;
@@ -22,8 +20,6 @@ contract eggtracker is Errors, linkedList, tracker{
 
 	struct user{
 		string name;
-		uint uid;
-		address addr;
 		bool exists;
 		mapping(uint => bool) perms;
 	}
@@ -31,25 +27,21 @@ contract eggtracker is Errors, linkedList, tracker{
 	mapping(uint => egg) eggs;
 	mapping(address => user) users;
 
-	linkedlist userList;
+	serialList userList;
 
 	uint EGGIDCOUNT;
-	uint USERCOUNT;
 
 	function eggtracker() {
 		EGGIDCOUNT = 0;
-		USERCOUNT = 1;
 
 		user owner = users[msg.sender];
 		owner.name = "MASTER";
-		owner.uid = USERCOUNT;
-		owner.addr = msg.sender;
 		owner.perms[PERM_ADMIN] = true;
 		owner.perms[PERM_CREATE] = true;
 		owner.perms[PERM_TRADE] = true;
 		owner.exists = true;
 
-		pushlink(userList, 0, USERCOUNT, bytes32(msg.sender));
+		append(userList, bytes32(msg.sender));
 	}
 
 	function isAdmin(address user) constant returns (bool ret) {
@@ -79,18 +71,14 @@ contract eggtracker is Errors, linkedList, tracker{
 			return RESOURCE_ALREADY_EXISTS; 
 		}
 
-		USERCOUNT = USERCOUNT + 1;
-
 		newuser.name = name;
-		newuser.uid = USERCOUNT;
-		newuser.addr = userAddress;
 		newuser.perms[PERM_ADMIN] = adminPerm;
 		newuser.perms[PERM_CREATE] = createPerm;
 		newuser.perms[PERM_TRADE] = tradePerm;
 		newuser.exists = true;
 
-		pushlink(userList, 0, USERCOUNT, bytes32(userAddress));
-		update("users", USERCOUNT, 0);
+		append(userList, bytes32(userAddress));
+		updateAU("users", msg.sender, 0);
 
 		return NO_ERROR;
 	}
@@ -114,7 +102,7 @@ contract eggtracker is Errors, linkedList, tracker{
 		olduser.perms[PERM_CREATE] = createPerm;
 		olduser.perms[PERM_TRADE] = tradePerm;
 
-		update("users", olduser.uid, 0);
+		updateAU("users", userAddress, 0);
 
 		return NO_ERROR;
 	}
@@ -139,40 +127,31 @@ contract eggtracker is Errors, linkedList, tracker{
 		olduser.perms[PERM_CREATE] = false;
 		olduser.perms[PERM_TRADE] = false;
 
-		remove("users", olduser.uid, 0);
+		remove(userList, bytes32(userAddress));
+		removeAU("users", userAddress, 0);
 
 		return NO_ERROR;
 	}
 
 	function getShit() constant returns (uint EGGLen, uint USERLen){
 		EGGLen = EGGIDCOUNT;
-		USERLen = userList.len-1;
+		USERLen = userList.len;
 		return;
 	}
 
-	function getUser(uint uid) constant returns (string name, address addr, bool exists, bool adminPerm, bool createPerm, bool tradePerm) {
-		address userAddress = address(getlinkdataat(userList, int(uid)));
+	function deserializeUsers(uint pos) constant returns (address) {
+		return address(getAtPos(userList, pos));
+	}
+
+	function getUser(address userAddress) constant returns (string name, bool exists, bool adminPerm, bool createPerm, bool tradePerm) {
 		user thisUser = users[userAddress];
 		name = thisUser.name;
-		addr = thisUser.addr;
 		exists = thisUser.exists;
 		adminPerm = thisUser.perms[PERM_ADMIN];
 		createPerm = thisUser.perms[PERM_CREATE];
 		tradePerm = thisUser.perms[PERM_TRADE];
 		return;
 	}
-
-	function getUserByAddress(address userAddress) constant returns (string name, address addr, bool exists, bool adminPerm, bool createPerm, bool tradePerm) {
-		user thisUser = users[userAddress];
-		name = thisUser.name;
-		addr = thisUser.addr;
-		exists = thisUser.exists;
-		adminPerm = thisUser.perms[PERM_ADMIN];
-		createPerm = thisUser.perms[PERM_CREATE];
-		tradePerm = thisUser.perms[PERM_TRADE];
-		return;
-	}
-
 
 	function getEggData(uint eggid) constant returns (address owner, address transferredTo, bytes32 secretHash, bool claimed, uint originDate, string desc, uint historyLength, bool exists){
 		egg thisEgg = eggs[eggid];
@@ -188,10 +167,10 @@ contract eggtracker is Errors, linkedList, tracker{
 		return;
 	}
 
-	function getHistoryEntry(uint eggid, uint eventNum) constant returns (uint etype, address actor, uint time){
+	function getHistoryEntry(uint eggid, uint eventid) constant returns (uint etype, address actor, uint time){
 		egg thisEgg = eggs[eggid];
 
-		evt thisEvent = thisEgg.hist.events[eventNum];
+		evt thisEvent = thisEgg.hist.events[eventid];
 		etype = thisEvent.etype;
 		actor = thisEvent.actor;
 		time = thisEvent.time;
