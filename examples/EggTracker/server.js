@@ -99,7 +99,7 @@ function getEggData(eggid, cb){
 			eggdata['history'] = rows;
 
 			//Finally we access the users table to retrieve the "real" name of the user associated with the egg's owner address
-			eggcache.db.get('select * from users where addr = ?', eggdata.owner, function(err, userData){
+			eggcache.db.get('select * from users where address = ?', eggdata.owner, function(err, userData){
 				if (err) return cb(err);
 				eggdata["ownername"] = userData.name;
 				return cb(null, null, eggdata);
