@@ -1,9 +1,12 @@
 import "./stdlib/errors.sol";
 import "./stdlib/serialize.sol";
 import "./stdlib/tracker.sol";
-import "./stdlib/sqlsol.sol";
 
-contract eggtracker is Errors, sqlsol, serialize, tracker{
+contract eggtracker is Errors, serialize, tracker{
+	event update(string name, uint key1, uint key2);
+	event updateAU(string name, address key1, uint key2);
+
+	event removeAU(string name, address key1, uint key2);
 
 	uint constant PERM_ADMIN = 1;
 	uint constant PERM_CREATE = 2;

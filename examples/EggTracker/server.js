@@ -63,13 +63,8 @@ createDb().spread(function (url, validator) {
 		eggcache.addContract(eggsContract, eggStruct, "eggtracker", function(err){
 			if(err) throw err;
 
-			//Population of the tables. I'm not 100% certain of any circumstances where
-			//you would not want to initialize. but it could happen i guess
-			eggcache.initTables("eggtracker", function(err){
-				if(err) throw err;
-				console.log("SQL cache set up!")
-				startServer();
-			});
+			console.log("SQL cache set up!")
+			startServer();
 		})
 	});
 })

@@ -1,0 +1,78 @@
+Global Tool
+-----------
+
+Purpose:
+Eventually should run as a Daemon
+But for now just use it as an inspection tool
+
+Modes
+Administrative
+-> Add models
+-> Add contracts
+-> Add databases? -> partition files
+
+
+structure:
+->.eris/
+		- >sqlsol/
+				database1.json
+				database2.json
+				...
+				-> models/
+						names.json
+						0123456789ABCDEF.json
+
+
+database.json format
+{
+	"name":"Database Name"
+	"erisdbURL":"URLSTRING",
+	"account":{
+		"address":"AddressString",
+		"privKey":"privKeyString"
+	},
+	"contracts":{
+		"name":{
+			"name":"nameString"
+			"address":"AddressString",
+			"model":"HASHStringmodel"
+		},
+		...
+	}
+}
+
+
+Database operations
+
+CREATE DATABASE <name>	- Create a database.json options for providing account and url info
+MODIFY DATABASE <name> 	- Allows re-writing of base fields (account, url, name)
+USE <name> 				- Allows models and contracts to be added to Database.
+LOAD DATABASE <name>	- Initializes all tables
+DROP DATABASE <name> 	- Delete database.json file
+
+ADD CONTRACT <name> 	- Allows you to add a contract to a database (contract address, model, or spec.json and abi.json -> generates model.json)
+ADD MODEL <name> 		- Allows you to add a model.json directly and name it for whatever reason
+
+
+"Database" Structure
+
+Sqlite only has tables but each contract can have multiple tables associated with it. So if the names of the tables in contracts conflict... what do we do?
+
+Option 1)
+All tables are named ContractName/TableName -> Not ideal because update events wouldn't know about this. However this COULD be overcome by modifying tabName to reflect the contract name and then having the event use the contract name and table name from event data to construct the proper table name.
+-> It WOULD make queries a bit awkward as the full table name would have to be used
+
+Option 2)
+Ignore the issue but flag a conflict if you try to add a contract which has a table that already exists
+
+
+
+
+
+What is my goal?
+
+I want to query the sqlite table from the command line so I can see how things are changing without building some sort of stupid front end to check.
+
+In order to do this... I need to have a program I can boot up
+then I can submit queries into the sql table
+

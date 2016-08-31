@@ -1,0 +1,11 @@
+{
+	"initSeq":{
+		"histid": {"min": 0, "len":{"call": "getLength", "field": "histLen"}},
+	},
+	"tables":{
+		"valueHistory":{
+			"call": "getValueAt",
+			"keys": ["histid"]
+		}
+	}
+}
