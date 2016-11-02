@@ -76,3 +76,11 @@ I want to query the sqlite table from the command line so I can see how things a
 In order to do this... I need to have a program I can boot up
 then I can submit queries into the sql table
 
+
+
+
+Model format
+{
+	"abi":abi,
+	"structDef":structDef
+}
