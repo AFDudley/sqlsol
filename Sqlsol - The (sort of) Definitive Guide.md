@@ -192,7 +192,7 @@ Update Events: The Easy Part
 
 Finally after the tables have been defined and updated we need the cache to update throughout its life span. Thankfully this part is easy. Whenever an object is updated you simply need to emit an event with the name of the table you wish to update along with the required keys. SQLSOL will listen to any event with a naming scheme of "update\*".
 
-*NOTE do not name any events with the same update\* naming scheme or sqlsol with crash.* 
+NOTE do not name any events with the same "update\*" naming scheme or sqlsol with crash.*
 
 For example we have two tables and we will define an update event for each of them.
 
@@ -221,7 +221,7 @@ function declare(uint pokedexNum, string pokeName, string desc, bool shiny){
 }
 ```
 
-If you which to delete an entry from the associated table you can trigger a remove\* event similarly to the update event but it will remove the entry with the provided keys from the provided table name.
+If you which to delete an entry from the associated table you can trigger a "remove*" event similarly to the update event but it will remove the entry with the provided keys from the provided table name.
 
 We now have covered all the components that go into being sqlsol compatible. Namely they can be summed up as, Get-Row functions, Initialization sequence functions (length getting and deserialization functions) and update events. For completeness I am putting the two files together here for reference (and filling in a couple glue pieces)
 
