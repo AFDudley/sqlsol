@@ -23,7 +23,7 @@
   "license": "ISC",
   "dependencies": {
     "async": "^2.0.0-rc.6",
-    "eris-contracts": "^0.13.3",
+    "eris-contracts": "^0.15.6",
     "fs-extra": "^0.30.0",
     "lineparser": "^0.9.8",
     "prompt-sync": "^4.1.4",
